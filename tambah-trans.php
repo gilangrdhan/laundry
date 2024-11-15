@@ -2,7 +2,12 @@
 session_start();
 include 'koneksi.php';
 
-$queryLevel = mysqli_query($koneksi, "SELECT * FROM level");
+$queryCustomer  = mysqli_query($koneksi, "SELECT * FROM customer");
+$queryPaket     = mysqli_query($koneksi, "SELECT * FROM paket");
+$rowPaket = [];
+while ($data = mysqli_fetch_assoc($queryPaket)) {
+    $rowPaket[] = $data;
+}
 
 // jika button simpan ditekan
 if (isset($_POST['simpan'])) {
@@ -135,104 +140,127 @@ if (isset($_POST['edit'])) {
                 <div class="content-wrapper">
                     <!-- Content -->
 
-                    <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="container-xxl container-p-y">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <div class="card">
-                                    <div class="card-header"><?php echo isset($_GET['edit']) ? 'Edit' : 'Tambah' ?> User</div>
+                                    <div class="card-header"><?php echo isset($_GET['edit']) ? 'Edit' : 'Tambah' ?> Transaksi</div>
                                     <div class="card-body">
                                         <?php if (isset($_GET['hapus'])): ?>
                                             <div class="alert alert-success" role="alert">
                                                 Data berhasil dihapus
                                             </div>
                                         <?php endif ?>
-
-
                                         <form action="" method="post" enctype="multipart/form-data">
                                             <div class="mb-3 row">
-                                                <div class="col-sm-6">
-                                                    <label for="" class="form-label">Nama</label>
-                                                    <input type="text"
-                                                        value="<?php echo isset($_GET['edit']) ? $rowEdit['nama'] : '' ?>"
-                                                        class="form-control"
-                                                        name="nama"
-                                                        placeholder="masukkan nama anda" required>
+                                                <div class="col-sm mb-3">
+                                                    <label for="">Nama Pelanggan</label>
+                                                    <select name="id_customer" id="" class="form-control">
+                                                        <option value="">Pilih Customer</option>
+                                                        <?php while ($row = mysqli_fetch_assoc($queryCustomer)): ?>
 
-                                                </div>
-
-
-                                                <div class="col-sm-6">
-                                                    <label for="" class="form-label">email</label>
-                                                    <input type="email"
-                                                        value="<?php echo isset($_GET['edit']) ? $rowEdit['email'] : '' ?>"
-                                                        class="form-control"
-                                                        name="email"
-                                                        placeholder="masukkan email anda" required>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row">
-                                                <div class="col-sm-6">
-                                                    <label for="" class="" form-label>Username</label>
-                                                    <input type="text"
-                                                        value="<?php echo isset($_GET['edit']) ? $rowEdit['username'] : '' ?>"
-                                                        placeholder="Masukkan Password Anda" required class="form-control" name="username">
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label for="" class="form-label">Nama level</label>
-                                                    <select name="id_level" id="" class="form-control">
-                                                        <option value="">Pilih Level</option>
-                                                        <?php
-                                                        while ($row = mysqli_fetch_assoc($queryLevel)):
-                                                            if ($row['id'] == $rowEdit['id_level']) {
-                                                                $selected = 'selected';
-                                                            } else {
-                                                                $selected = '';
-                                                            }
-                                                        ?>
-                                                            <option <?php echo $selected ?> value="<?php echo $row['id'] ?>"><?php echo $row['nama_level'] ?></option>
-                                                        <?php
-                                                        endwhile;
-                                                        // $rows = mysqli_fetch_all($queryLevel, MYSQLI_ASSOC);
-                                                        // foreach ($rows as $value) {
-                                                        ?>
-                                                        <!-- <option value="<?php
-                                                                            // echo $value['id'] 
-                                                                            ?>"><?php
-                                                                                // echo $value['nama_level'] 
-                                                                                ?></option> -->
-                                                        <?php
-                                                        // }
-                                                        ?>
+                                                            <option value="<?php echo $row['id'] ?>"><?php echo $row['nama_customer'] ?></option>
+                                                        <?php endwhile ?>
                                                     </select>
                                                 </div>
-                                            </div>
-                                            <div class="mb-3 row">
-                                                <div class="col-sm-6">
-                                                    <label for="" class="" form-label>Password</label>
-                                                    <input type="password" placeholder="Masukkan Password Anda" class="form-control" name="password">
-                                                </div>
-
-                                            </div>
-
-                                            <!-- <div class="mb-3 row">
-                                                    <div class="col-sm-12">
-                                                        <label for="" class="" form-label>Foto</label>
-                                                        <input type="file"
-                                                            name="foto">
-
+                                                <div class="mb-3 row">
+                                                    <div class="col-sm-6">
+                                                        <label for="" class="form-label">No Invoice</label>
+                                                        <input type="text"
+                                                            value="<?php echo isset($_GET['edit']) ? $rowEdit['no_transakasi'] : '' ?>"
+                                                            class="form-control"
+                                                            name="no_transaksi" readonly value='#'>
                                                     </div>
-                                                </div> -->
-                                            <div class="mb-3">
-                                                <button class="btn btn-primary" name="<?php echo isset($_GET['edit']) ? 'edit' : 'simpan' ?>" type="submit">simpan</button>
+                                                    <div class="col-sm-6">
+                                                        <label for="" class="form-label">Tanggal Laundry</label>
+                                                        <input type="date"
+                                                            value="<?php echo isset($_GET['edit']) ? $rowEdit['tanggal_laundry
+                                                            '] : '' ?>"
+                                                            class="form-control"
+                                                            name="tanggal_laundry"
+                                                            value="">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <button class="btn btn-primary" name="<?php echo isset($_GET['edit']) ? 'edit' : 'simpan' ?>" type="submit">simpan</button>
+                                                </div>
                                             </div>
-
                                         </form>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="card">
+                                    <div class="card-header"><?php echo isset($_GET['edit']) ? 'Edit' : 'Tambah' ?> Detail Transaksi</div>
+                                    <div class="card-body">
+                                        <?php if (isset($_GET['hapus'])): ?>
+                                            <div class="alert alert-success" role="alert">
+                                                Data berhasil dihapus
+                                            </div>
+                                        <?php endif ?>
+                                        <form action="" method="post" enctype="multipart/form-data">
+                                            <div class="mb-3 row">
+                                                <div class="col-sm-1">
+                                                    <label for="">Paket</label>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <select name="id_paket[]" id="" class="form-control">
+                                                        <option value="">Pilih Paket</option>
+                                                        <?php foreach ($rowPaket as $key => $value) {
+                                                        } ?>
 
+                                                        <option value="<?php echo $value['id'] ?>"><?php echo $value['nama_paket'] ?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <div class="col-sm-1">
+                                                    <label for="" class="form-label">qty</label>
+                                                </div>
+                                                <div class="col-sm-11">
+                                                    <input type="text"
+                                                        value="<?php echo isset($_GET['edit']) ? $rowEdit['tanggal_laundry
+                                                    '] : '' ?>"
+                                                        class="form-control"
+                                                        name="qty[]"
+                                                        value="">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <div class="col-sm-1">
+                                                    <label for="">Paket</label>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <select name="id_paket[]" id="" class="form-control">
+                                                        <option value="">Pilih Paket</option>
+                                                        <?php foreach ($rowPaket as $key => $value) {
+                                                        } ?>
+
+                                                        <option value="<?php echo $value['id'] ?>"><?php echo $value['nama_paket'] ?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <div class="col-sm-1">
+                                                    <label for="" class="form-label">qty</label>
+                                                </div>
+                                                <div class="col-sm-11">
+                                                    <input type="text"
+                                                        value="<?php echo isset($_GET['edit']) ? $rowEdit['tanggal_laundry
+                                                    '] : '' ?>"
+                                                        class="form-control"
+                                                        name="qty[]"
+                                                        value="">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <button class="btn btn-primary" name="<?php echo isset($_GET['edit']) ? 'edit' : 'simpan' ?>" type="submit">simpan</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
                     </div>
                     <!-- / Content -->
 

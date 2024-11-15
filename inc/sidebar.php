@@ -90,17 +90,17 @@ $id = $_SESSION['id_level'];
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="pages-account-settings-notifications.html" class="menu-link">
+                        <a href="level.php" class="menu-link">
                             <div data-i18n="Notifications">Level</div>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="pages-account-settings-connections.html" class="menu-link">
+                        <a href="customer.php" class="menu-link">
                             <div data-i18n="Connections">Customer</div>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="pages-account-settings-connections.html" class="menu-link">
+                        <a href="paket.php" class="menu-link">
                             <div data-i18n="Connections">Paket</div>
                         </a>
                     </li>
@@ -108,7 +108,7 @@ $id = $_SESSION['id_level'];
             </li>
         <?php endif ?>
 
-        <?php if ($_SESSION['id_level'] == 2): ?>
+        <?php if ($_SESSION['id_level'] == 3): ?>
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
@@ -116,7 +116,7 @@ $id = $_SESSION['id_level'];
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item">
-                        <a href="instruktur.php" class="menu-link" target="_blank">
+                        <a href="trans_order.php" class="menu-link" target="_blank">
                             <div data-i18n="Basic">Data Transaksi</div>
                         </a>
                     </li>

@@ -2,7 +2,7 @@
 session_start();
 include 'koneksi.php';
 // munculkan atau pilih sebuah atau semua kolom dari table user 
-$queryUser = mysqli_query($koneksi, "SELECT level.nama_level, user.* FROM user LEFT JOIN level on level.id = user.id_level ORDER BY id DESC");
+$queryCustomer = mysqli_query($koneksi, "SELECT customer.nama_customer, customer.* FROM customer ORDER BY id DESC");
 // mysqli_fetch_assoc()= untuk menjadikan hasil query menjadi sebuah data (object)
 
 // jika parameternya ada?delete=nilai parameter
@@ -10,8 +10,8 @@ if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
 
     //query atau perintah hapus
-    $delete = mysqli_query($koneksi, "DELETE FROM user WHERE id = '$id'");
-    header("location:user.php?hapus=berhasil");
+    $delete = mysqli_query($koneksi, "DELETE FROM customer WHERE id = '$id'");
+    header("location:customer.php?hapus=berhasil");
 }
 
 
@@ -81,7 +81,7 @@ if (isset($_GET['delete'])) {
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card">
-                                    <div class="card-header">Data User</div>
+                                    <div class="card-header">Data Customer</div>
                                     <div class="card-body">
                                         <?php if (isset($_GET['hapus'])): ?>
                                             <div class="alert alert-success" role="alert">
@@ -89,27 +89,30 @@ if (isset($_GET['delete'])) {
                                             </div>
                                         <?php endif ?>
                                         <div align="right" class="mb-3">
-                                            <a href="tambah-user.php" class="btn btn-primary">Tambah</a>
+                                            <a href="tambah-customer.php" class="btn btn-primary">Tambah</a>
                                         </div>
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Nama</th>
-                                                    <th>Email</th>
+                                                    <th>Nama Pelanggan</th>
+                                                    <th>Telephone</th>
+                                                    <th>Alamat</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php $no = 1;
-                                                while ($rowUser = mysqli_fetch_assoc($queryUser)) { ?>
+                                                while ($rowCustomer = mysqli_fetch_assoc($queryCustomer)) { ?>
                                                     <tr>
                                                         <td><?php echo $no++ ?></td>
-                                                        <td><?php echo $rowUser['nama'] ?></td>
-                                                        <td><?php echo $rowUser['email'] ?></td>
+                                                        <td><?php echo $rowCustomer['nama_customer'] ?></td>
+                                                        <td><?php echo $rowCustomer['phone'] ?></td>
+                                                        <td><?php echo $rowCustomer['address'] ?></td>
+
                                                         <td>
-                                                            <a href="tambah-user.php?edit=<?php echo $rowUser['id'] ?>" class="tf-icon bx bx-pencil btn-sm btn btn-warning"></a>
-                                                            <a onclick="return confirm ('Apakah anda yakin menghapus data ini???')" href="user.php?delete=<?php echo $rowUser['id'] ?>" class="btn btn-danger btn-sm">
+                                                            <a href="tambah-customer.php?edit=<?php echo $rowCustomer['id'] ?>" class="tf-icon bx bx-pencil btn-sm btn btn-warning"></a>
+                                                            <a onclick="return confirm ('Apakah anda yakin menghapus data ini???')" href="customer.php?delete=<?php echo $rowCustomer['id'] ?>" class="btn btn-danger btn-sm">
                                                                 <span class="tf-icon bx bx-trash"></span>
                                                             </a>
                                                         </td>

@@ -1,20 +1,34 @@
 <?php
 session_start();
 include 'koneksi.php';
-// munculkan atau pilih sebuah atau semua kolom dari table user 
-$queryUser = mysqli_query($koneksi, "SELECT level.nama_level, user.* FROM user LEFT JOIN level on level.id = user.id_level ORDER BY id DESC");
-// mysqli_fetch_assoc()= untuk menjadikan hasil query menjadi sebuah data (object)
 
-// jika parameternya ada?delete=nilai parameter
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
+$queryLevel = mysqli_query($koneksi, "SELECT * FROM level");
 
-    //query atau perintah hapus
-    $delete = mysqli_query($koneksi, "DELETE FROM user WHERE id = '$id'");
-    header("location:user.php?hapus=berhasil");
+// jika button simpan ditekan
+if (isset($_POST['simpan'])) {
+    $nama_level   = $_POST['nama_level'];
+
+    $queryInsert = mysqli_query($koneksi, "INSERT INTO level (nama_level) VALUES ('$nama_level')");
+
+    if ($queryInsert) {
+        header("location:level.php?tambah=berhasil");
+    }
 }
+$id = isset($_GET['edit']) ? $_GET['edit'] : '';
+$queryEdit = mysqli_query($koneksi, "SELECT * FROM level WHERE id = '$id'");
+$rowEdit = mysqli_fetch_assoc($queryEdit);
+
+// jika button edit di klik
+if (isset($_POST['edit'])) {
+    $nama_level  = $_POST['nama_level'];
+    
 
 
+    
+
+    $update = mysqli_query($koneksi, "UPDATE level SET nama_level='$nama_level' WHERE id='$id'");
+    header("location:level.php?ubah=berhasil");
+}
 
 ?>
 
@@ -81,43 +95,31 @@ if (isset($_GET['delete'])) {
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card">
-                                    <div class="card-header">Data User</div>
+                                    <div class="card-header"><?php echo isset($_GET['edit']) ? 'Edit' : 'Tambah' ?> Level </div>
                                     <div class="card-body">
                                         <?php if (isset($_GET['hapus'])): ?>
                                             <div class="alert alert-success" role="alert">
                                                 Data berhasil dihapus
                                             </div>
                                         <?php endif ?>
-                                        <div align="right" class="mb-3">
-                                            <a href="tambah-user.php" class="btn btn-primary">Tambah</a>
-                                        </div>
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nama</th>
-                                                    <th>Email</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php $no = 1;
-                                                while ($rowUser = mysqli_fetch_assoc($queryUser)) { ?>
-                                                    <tr>
-                                                        <td><?php echo $no++ ?></td>
-                                                        <td><?php echo $rowUser['nama'] ?></td>
-                                                        <td><?php echo $rowUser['email'] ?></td>
-                                                        <td>
-                                                            <a href="tambah-user.php?edit=<?php echo $rowUser['id'] ?>" class="tf-icon bx bx-pencil btn-sm btn btn-warning"></a>
-                                                            <a onclick="return confirm ('Apakah anda yakin menghapus data ini???')" href="user.php?delete=<?php echo $rowUser['id'] ?>" class="btn btn-danger btn-sm">
-                                                                <span class="tf-icon bx bx-trash"></span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
 
-                                            </tbody>
-                                        </table>
+
+                                        <form action="" method="post" enctype="multipart/form-data">
+                                            <div class="mb-3 row">
+                                                <div class="col-sm-6">
+                                                    <label for="" class="form-label">Nama level</label>
+                                                    <input type="text" name="nama_level" placeholder="Nama Level"
+                                                    class="form-control"
+                                                    value="<?php echo !empty($_GET['edit']) ? $rowEdit ['nama_level'] : ''?>">
+                                                    
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <button class="btn btn-primary" name="<?php echo isset($_GET['edit']) ? 'edit' : 'simpan' ?>" type="submit">simpan</button>
+                                            </div>
+
+                                        </form>
                                     </div>
                                 </div>
                             </div>

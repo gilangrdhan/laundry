@@ -3,6 +3,9 @@ session_start();
 include 'koneksi.php';
 // munculkan atau pilih sebuah atau semua kolom dari table user 
 $queryTransOrder = mysqli_query($koneksi, "SELECT customer.nama_customer, trans_order.* FROM trans_order LEFT JOIN customer on customer.id = trans_order.id_customer ORDER BY id DESC");
+// $data = mysqli_fetch_array($queryTransOrder);
+// print_r($data);
+// die;
 // mysqli_fetch_assoc()= untuk menjadikan hasil query menjadi sebuah data (object)
 
 // jika parameternya ada?delete=nilai parameter
@@ -107,15 +110,32 @@ if (isset($_GET['delete'])) {
                                                 while ($rowTransOrder = mysqli_fetch_assoc($queryTransOrder)) { ?>
                                                     <tr>
                                                         <td><?php echo $no++ ?></td>
-                                                        <td><?php echo $TransOrder['id_customer'] ?></td>
-                                                        <td><?php echo $TransOrder['nama_customer'] ?></td>
-                                                        <td><?php echo $TransOrder['tanggal_laundry'] ?></td>
-                                                        <td><?php echo $TransOrder['status'] ?></td>
-
+                                                        <td><?php echo $rowTransOrder['no_transaksi'] ?></td>
+                                                        <td><?php echo $rowTransOrder['nama_customer'] ?></td>
+                                                        <td><?php echo $rowTransOrder['tanggal_laundry'] ?></td>
                                                         <td>
-                                                            <a href="tambah-trans.php?edit=<?php echo $rowTransOrder['id'] ?>" class="tf-icon bx bx-print bx-18px"></a>
+                                                            <?php
+                                                            switch ($rowTransOrder['status']) {
+                                                                case '1':
+                                                                    $badge = "<span class='badge bg-success text-black'>Sudah dikembalikan</span>";
+                                                                    break;
+
+                                                                default:
+                                                                    $badge = "<span class='badge bg-warning text-black'>Baru</span>";
+                                                                    break;
+                                                            }
+                                                            echo $badge;
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <a href="tambah-trans.php?detail=<?php echo $rowTransOrder['id'] ?>">
+                                                                <span class="tf-icon bx bx-detail bx-18px"></span>
+                                                            </a>
+                                                            <a href="print.php?id=<?php echo $rowTransOrder['id'] ?>">
+                                                                <span class="tf-icon bx bx-printer bx-18px"></span>
+                                                            </a>
                                                             <a onclick="return confirm ('Apakah anda yakin menghapus data ini???')" href="trans_order.php?delete=<?php echo $rowTransOrder['id'] ?>" class="btn btn-danger btn-sm">
-                                                                <span class="tf-icon bx bx-trash"></span>
+                                                                <span class="tf-icon bx bx-trash 18px"></span>
                                                             </a>
                                                         </td>
                                                     </tr>

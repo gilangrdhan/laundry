@@ -2,7 +2,30 @@
 session_start();
 include 'koneksi.php';
 // munculkan atau pilih sebuah atau semua kolom dari table user 
-$queryTransOrder = mysqli_query($koneksi, "SELECT customer.nama_customer, trans_order.* FROM trans_order LEFT JOIN customer on customer.id = trans_order.id_customer ORDER BY id DESC");
+$tanggal_dari   = isset($_GET['tanggal_dari']) ? $_GET['tanggal_dari'] : '';
+$tanggal_sampai = isset($_GET['tanggal_sampai']) ? $_GET['tanggal_sampai'] : '';
+$status         = isset($_GET['status']) ? $_GET['status'] : '';
+
+$query = "SELECT customer.nama_customer, trans_order.* FROM trans_order LEFT JOIN customer on customer.id = trans_order.id_customer WHERE 1 ";
+
+//jika status tidak kosong
+if ($tanggal_dari != "") {
+    $query .= " AND trans_order.tanggal_laundry >='$tanggal_dari'";
+}
+
+if ($tanggal_sampai != "") {
+    $query .= "AND trans_order.tanggal_laundry <='$tanggal_sampai'";
+}
+if ($status != "") {
+    $query .= " AND trans_order.status =$status";
+    // print_r($query);
+    // die;
+}
+
+
+// $query .= "ORDER BY trans_order.id DESC";
+
+$queryTransOrder = mysqli_query($koneksi, $query);
 // $data = mysqli_fetch_array($queryTransOrder);
 // print_r($data);
 // die;
@@ -91,9 +114,35 @@ if (isset($_GET['delete'])) {
                                                 Data berhasil dihapus
                                             </div>
                                         <?php endif ?>
-                                        <div align="right" class="mb-3">
-                                            <a href="tambah-trans.php" class="btn btn-primary">Tambah</a>
-                                        </div>
+                                        <!-- //filter data transaksi -->
+                                        <form action="" method="get">
+                                            <div class="mb-3 row">
+                                                <div class="col-sm-3">
+                                                    <label for="tanggal_dari">Tanggal Dari</label>
+                                                    <input type="date" name="tanggal_dari" id="tanggal_dari" class="form-control">
+                                                </div>
+
+                                                <div class="col-sm-3">
+                                                    <label for="tanggal_sampai">Tanggal Sampai</label>
+                                                    <input type="date" name="tanggal_sampai" id="tanggal_sampai" class="form-control">
+                                                </div>
+
+                                                <div class="col-sm-3">
+                                                    <label for="status">Status</label>
+                                                    <select name="status" id="status" class="form-control">
+                                                        <option value="">--Pilih Status--</option>
+                                                        <option value="0">Baru</option>
+                                                        <option value="1">Sudah Dikembalikan</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-sm-3 d-flex align-items-end">
+                                                    <button name="filter" class="btn btn-primary w-100">Tampilkan Laporan</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
@@ -106,7 +155,7 @@ if (isset($_GET['delete'])) {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php include 'helper.php';?>
+                                                <?php include 'helper.php'; ?>
                                                 <?php $no = 1;
                                                 while ($rowTransOrder = mysqli_fetch_assoc($queryTransOrder)) { ?>
                                                     <tr>
@@ -115,8 +164,8 @@ if (isset($_GET['delete'])) {
                                                         <td><?php echo $rowTransOrder['nama_customer'] ?></td>
                                                         <td><?php echo $rowTransOrder['tanggal_laundry'] ?></td>
                                                         <td>
-                                                        <?php
-                                                         echo changeStatus($rowTransOrder['status']) ?>
+                                                            <?php
+                                                            echo changeStatus($rowTransOrder['status']) ?>
                                                         </td>
                                                         <td>
                                                             <a href="tambah-trans.php?detail=<?php echo $rowTransOrder['id'] ?>">
@@ -125,9 +174,7 @@ if (isset($_GET['delete'])) {
                                                             <a href="print.php?id=<?php echo $rowTransOrder['id'] ?>">
                                                                 <span class="tf-icon bx bx-printer bx-18px"></span>
                                                             </a>
-                                                            <a onclick="return confirm ('Apakah anda yakin menghapus data ini???')" href="trans_order.php?delete=<?php echo $rowTransOrder['id'] ?>" class="btn btn-danger btn-sm">
-                                                                <span class="tf-icon bx bx-trash 18px"></span>
-                                                            </a>
+
                                                         </td>
                                                     </tr>
                                                 <?php } ?>

@@ -106,7 +106,7 @@ if (isset($_GET['delete'])) {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php include 'helper.php';?>
+                                                <?php include 'helper.php'; ?>
                                                 <?php $no = 1;
                                                 while ($rowTransOrder = mysqli_fetch_assoc($queryTransOrder)) { ?>
                                                     <tr>
@@ -115,8 +115,8 @@ if (isset($_GET['delete'])) {
                                                         <td><?php echo $rowTransOrder['nama_customer'] ?></td>
                                                         <td><?php echo $rowTransOrder['tanggal_laundry'] ?></td>
                                                         <td>
-                                                        <?php
-                                                         echo changeStatus($rowTransOrder['status']) ?>
+                                                            <?php
+                                                            echo changeStatus($rowTransOrder['status']) ?>
                                                         </td>
                                                         <td>
                                                             <a href="tambah-trans.php?detail=<?php echo $rowTransOrder['id'] ?>">
